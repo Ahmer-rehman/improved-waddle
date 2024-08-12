@@ -1,0 +1,94 @@
+/* General styling */
+.App {
+  text-align: center;
+  padding: 1rem;
+}
+
+.App-image {
+  max-width: 100%;
+  height: auto;
+  margin-top: 20px;
+  border-radius: 10px;
+  border: 2px solid #fff;
+}
+
+.App-main {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+  padding: 2rem;
+  box-sizing: border-box;
+}
+
+.text-box, .confidence-box, .progress-box {
+  background: #fff;
+  color: #333;
+  border-radius: 5px;
+  text-align: center;
+  padding: 15px;
+  width: 100%;
+  max-width: 600px;
+  margin-top: 20px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+button {
+  background-color: #61dafb;
+  color: #282c34;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  cursor: pointer;
+  margin-top: 20px;
+  font-size: 1rem;
+  transition: background-color 0.3s ease;
+  width: 100%;
+  max-width: 300px;
+}
+
+button:disabled {
+  background-color: #999;
+  cursor: not-allowed;
+}
+
+button:hover:not(:disabled) {
+  background-color: #21a1f1;
+}
+
+/* Media queries for smaller screens */
+@media (max-width: 768px) {
+  .App-main {
+    padding: 1rem;
+  }
+
+  .App-image {
+    width: 80vw;
+  }
+
+  button {
+    width: 80vw;
+  }
+}
+
+@media (max-width: 480px) {
+  .App-main {
+    padding: 0.5rem;
+  }
+
+  .App-image {
+    width: 100%;
+  }
+
+  button {
+    width: 100%;
+  }
+
+  .text-box, .confidence-box, .progress-box {
+    width: 100%;
+  }
+}
