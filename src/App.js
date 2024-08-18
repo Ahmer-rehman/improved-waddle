@@ -1,28 +1,6 @@
-// import { useDispatch, useSelector } from "react-redux";
-// import { fetchTodos } from "./redux/slice/todo";
-// import "./App.css";
-
-// function App() {
-//   const dispatch = useDispatch();
-//   const state = useSelector((state) => state);
-
-//   console.log("State", state);
-
-//   if (state.todo.isLoading) {
-//     return <h1>Loading....</h1>;
-//   }
-
-//   return (
-//     <div className="App">
-//       <button onClick={(e) => dispatch(fetchTodos())}>Fetch Todos</button>
-//       {state.todo.data && state.todo.data.map((e) => <li>{e.title}</li>)}
-//     </div>
-//   );
-// }
-
-// export default App;
 import React, { useState, useRef } from 'react';
 import Tesseract from 'tesseract.js';
+import axios from 'axios';
 import './App.css';
 
 function App() {
@@ -31,6 +9,7 @@ function App() {
   const [confidence, setConfidence] = useState(null);
   const [loading, setLoading] = useState(false);
   const [progress, setProgress] = useState(0);
+  const [billResult, setBillResult] = useState(null);
   const canvasRef = useRef(null);
 
   const handleChange = (event) => {
@@ -83,14 +62,34 @@ function App() {
       .then((result) => {
         setText(result.data.text);
         setConfidence(result.data.confidence);
+
+        // After extracting text, send it to the Flask API for bill calculation
+        calculateBill(result.data.text.trim());
       })
       .catch((err) => {
         console.error('OCR Error:', err);
         setText('An error occurred during text extraction.');
-      })
-      .finally(() => {
         setLoading(false);
       });
+  };
+
+  const calculateBill = async (currentReading) => {
+    try {
+      const previousReading = 12345; // Example previous reading, can be dynamic or from a user input
+      const tariffPerUnit = 0.12; // Example tariff per unit
+
+      const response = await axios.post('http://172.28.0.12:5000//calculate-bill', {
+        current_reading: currentReading,
+        previous_reading: previousReading,
+        tariff_per_unit: tariffPerUnit,
+      });
+
+      setBillResult(response.data);
+    } catch (error) {
+      console.error('Error calculating bill:', error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -125,6 +124,14 @@ function App() {
         >
           {loading ? 'Processing...' : 'Convert to Text'}
         </button>
+
+        {billResult && (
+          <div className="bill-result">
+            <h3>Electricity Bill Details</h3>
+            <p>Consumption: {billResult.consumption} units</p>
+            <p>Total Bill: ${billResult.bill_amount.toFixed(2)}</p>
+          </div>
+        )}
       </main>
     </div>
   );
